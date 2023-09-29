@@ -3,6 +3,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 #include "parse_ply.hpp"
@@ -100,9 +101,13 @@ int parse_ply(const std::string &filepath, PropertyCallbackFunc property_callbac
     for (size_t i = 0; i < element_count; i++) {
       std::getline(ifs, line);
       std::istringstream data_iss(line);
+      Element e;
+      e.name = element_name;
       for (const auto &pd : ed.property_definitions) {
-        property_callback(element_name, parse_property_definition(pd, data_iss));
+        Property p = parse_property_definition(pd, data_iss);
+        e.properties[p.name] = p;
       }
+      property_callback(e);
     }
   }
   return 0;

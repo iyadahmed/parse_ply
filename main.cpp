@@ -1,7 +1,4 @@
 #include <iostream>
-#include <sstream>
-#include <string>
-#include <string_view>
 
 #include "parse_ply.hpp"
 
@@ -13,8 +10,11 @@ int main(int argc, char *argv[]) {
   const char *filepath = argv[1];
   parse_ply(
       filepath,
-      [](std::string_view element_name, const Property &prop) {
-        std::cout << element_name << ' ' << prop.name << ' ' << prop.values[0] << std::endl;
+      [](const Element &e) {
+        if (e.name == "vertex") {
+          std::cout << e.properties.at("x").values[0] << ' ' << e.properties.at("y").values[0] << ' '
+                    << e.properties.at("z").values[0] << std::endl;
+        }
       },
       false);
   return 0;
